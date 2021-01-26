@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "778078172350",
+    "firebase_url": "https://bookshop-e80af-default-rtdb.firebaseio.com",
+    "project_id": "bookshop-e80af",
+    "storage_bucket": "bookshop-e80af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778078172350:android:fddeb361e0d53721cc5aef",
+        "android_client_info": {
+          "package_name": "cloud.porto.bookshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "778078172350-df082ji999h2h4pionkeh5oaf3g9ggb3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZtZSgA21z66jV9lDo2OUkedNVRa1ChAE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "778078172350-df082ji999h2h4pionkeh5oaf3g9ggb3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
