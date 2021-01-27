@@ -7,34 +7,38 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var rv: RecyclerView
+    private lateinit var categories: ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+        title = getString(R.string.select_category)
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        // Initialize recyclerview
+        categories = ArrayList()
+        val adapter = CategoryAdapter(categories) {
+            view: View, item: String -> onItemClick(view, item)
         }
 
-        val books = ArrayList<Book>()
-        for (i in 1..20) {
-            books.add(Book("Book $i"))
-        }
-        val booksList = findViewById<RecyclerView>(R.id.booksList)
-        val adapter = BookAdapter(books)
-        booksList.adapter = adapter
-        booksList.layoutManager = LinearLayoutManager(this)
+        rv = findViewById(R.id.booksList)
+        rv.adapter = adapter
+        rv.layoutManager = LinearLayoutManager(this)
 
         // Initialize Firebase Auth
         auth = Firebase.auth
@@ -67,6 +71,37 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, LogIn::class.java)
             startActivity(intent)
             finish()
+        } else {
+            val database = FirebaseDatabase.getInstance().getReference("Books")
+            database.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    // Rebuild list
+                    categories.clear()
+                    snapshot.children.forEach {
+                        categories.add(it.key!!)
+                    }
+
+                    rv.adapter?.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    val builder = AlertDialog.Builder(this@MainActivity)
+                    with(builder)
+                    {
+                        setTitle("Loading failed")
+                        setMessage(error.message)
+                        setPositiveButton("OK", null)
+                        show()
+                    }
+                }
+            })
         }
+    }
+
+    private fun onItemClick(view: View, item: String) {
+        // Open category
+        val intent = Intent(this, BookActivity::class.java)
+        intent.putExtra(BookActivity.CATEGORY, item)
+        startActivity(intent)
     }
 }

@@ -5,18 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class BookAdapter(private val mBooks: List<Book>): RecyclerView.Adapter<BookAdapter.ViewHolder>() {
+class BookAdapter(private val mBooks: List<Book>, private val listener: (View, Book) -> Unit): RecyclerView.Adapter<BookAdapter.ViewHolder>() {
 
-    // Provide a direct reference to each of the views within a data item
-    // Used to cache the views within the item layout for fast access
     inner class ViewHolder(listItemView: View) : RecyclerView.ViewHolder(listItemView) {
-        // Your holder should contain and initialize a member variable
-        // for any view that will be set as you render a row
-        val title = itemView.findViewById<TextView>(R.id.bookTitle)
-        val image = itemView.findViewById<ImageView>(R.id.bookImage)
+        val title: TextView = itemView.findViewById(R.id.bookTitle)
+        val info: TextView = itemView.findViewById(R.id.bookInfo)
+        val ratingBar: ProgressBar = itemView.findViewById(R.id.ratingBar)
+        val ratingLabel: TextView = itemView.findViewById(R.id.ratingLabel)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,11 +31,30 @@ class BookAdapter(private val mBooks: List<Book>): RecyclerView.Adapter<BookAdap
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Get the data model based on position
-        val contact: Book = mBooks[position]
-        // Set item views based on your views and data model
-        val title = holder.title
-        title.text = "yoo"
-        //val image = holder.image
+        val book = mBooks[position]
+
+        with (book) {
+            // Set item views based on your views and data model
+            holder.title.text = title
+            holder.info.text = "${author} - ${publisher} - ${year}"
+            // Load rating bar and label
+            if (upVotes > 0 || downVotes > 0) {
+                holder.ratingBar.max = upVotes + downVotes
+                holder.ratingBar.progress = upVotes
+                holder.ratingLabel.isEnabled = true
+                holder.ratingLabel.text = "${upVotes * 100 / (upVotes + downVotes)}%"
+            } else {
+                holder.ratingBar.max = 1
+                holder.ratingBar.progress = 0
+                holder.ratingLabel.isEnabled = false
+                holder.ratingLabel.text = "100%"
+            }
+        }
+
+        // Set click listener
+        holder.itemView.setOnClickListener {
+            listener(it, book)
+        }
     }
 
     override fun getItemCount(): Int {
