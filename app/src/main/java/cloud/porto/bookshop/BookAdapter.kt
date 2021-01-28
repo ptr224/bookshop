@@ -14,8 +14,6 @@ class BookAdapter(private val mBooks: List<Book>, private val listener: (View, B
     inner class ViewHolder(listItemView: View) : RecyclerView.ViewHolder(listItemView) {
         val title: TextView = itemView.findViewById(R.id.bookTitle)
         val info: TextView = itemView.findViewById(R.id.bookInfo)
-        val ratingBar: ProgressBar = itemView.findViewById(R.id.ratingBar)
-        val ratingLabel: TextView = itemView.findViewById(R.id.ratingLabel)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,18 +35,6 @@ class BookAdapter(private val mBooks: List<Book>, private val listener: (View, B
             // Set item views based on your views and data model
             holder.title.text = title
             holder.info.text = "${author} - ${publisher} - ${year}"
-            // Load rating bar and label
-            if (upVotes > 0 || downVotes > 0) {
-                holder.ratingBar.max = upVotes + downVotes
-                holder.ratingBar.progress = upVotes
-                holder.ratingLabel.isEnabled = true
-                holder.ratingLabel.text = "${upVotes * 100 / (upVotes + downVotes)}%"
-            } else {
-                holder.ratingBar.max = 1
-                holder.ratingBar.progress = 0
-                holder.ratingLabel.isEnabled = false
-                holder.ratingLabel.text = "100%"
-            }
         }
 
         // Set click listener

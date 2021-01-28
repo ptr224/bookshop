@@ -2,12 +2,8 @@ package cloud.porto.bookshop
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +16,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 
-class BookActivity : AppCompatActivity() {
+class BooksActivity : AppCompatActivity() {
 
     companion object {
         const val CATEGORY = "CATEGORY"
@@ -55,8 +51,8 @@ class BookActivity : AppCompatActivity() {
         title = category
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         // Load books
         val database = FirebaseDatabase.getInstance().getReference("Books").child(category)
         database.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -73,7 +69,7 @@ class BookActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                val builder = AlertDialog.Builder(this@BookActivity)
+                val builder = AlertDialog.Builder(this@BooksActivity)
                 with(builder)
                 {
                     setTitle("Loading failed")
@@ -86,9 +82,10 @@ class BookActivity : AppCompatActivity() {
     }
 
     private fun onItemClick(view: View, item: Book) {
-        // Open category
-        val intent = Intent(this, ReviewActivity::class.java)
-        intent.putExtra(ReviewActivity.BOOK, "$category/${item.id}")
+        // Open book review
+        val intent = Intent(this, BookReviewActivity::class.java)
+        intent.putExtra(BookReviewActivity.CATEGORY, category)
+        intent.putExtra(BookReviewActivity.BOOK, item.id)
         startActivity(intent)
     }
 }

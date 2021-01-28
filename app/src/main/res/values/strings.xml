@@ -22,5 +22,8 @@
     <string name="password_edit_error">Enter password!</string>
     <string name="title_activity_book">Book</string>
     <string name="select_category">Select a category</string>
-    <string name="title_activity_review">ReviewActivity</string>
+    <string name="title_activity_review">All reviews</string>
+    <string name="submit_review">Submit review</string>
+    <string name="your_review">Your review:</string>
+    <string name="submit_review_button">Submit</string>
 </resources>

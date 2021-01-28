@@ -11,12 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Bookshop">
+        <activity android:name=".SubmitReview"
+            android:theme="@style/Theme.Bookshop.NoActionBar" />
         <activity
-            android:name=".ReviewActivity"
+            android:name=".BookReviewActivity"
             android:label="@string/title_activity_review"
-            android:theme="@style/Theme.Bookshop.NoActionBar"></activity>
+            android:theme="@style/Theme.Bookshop.NoActionBar" />
         <activity
-            android:name=".BookActivity"
+            android:name=".BooksActivity"
             android:label="@string/title_activity_book"
             android:theme="@style/Theme.Bookshop.NoActionBar" />
         <activity android:name=".SignUp" />

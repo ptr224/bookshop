@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 class CommentAdapter(private val comments: List<Comment>): RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
 
     inner class ViewHolder(listItemView: View) : RecyclerView.ViewHolder(listItemView) {
-        val user: TextView = itemView.findViewById(R.id.comment_user)
         val text: TextView = itemView.findViewById(R.id.comment_text)
     }
 
@@ -30,7 +29,6 @@ class CommentAdapter(private val comments: List<Comment>): RecyclerView.Adapter<
         // Get the data model based on position
         val comment = comments[position]
         // Set item views based on your views and data model
-        holder.user.text = comment.user
         holder.text.text = comment.comment
     }
 

@@ -2,12 +2,9 @@ package cloud.porto.bookshop
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
@@ -71,37 +67,41 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, LogIn::class.java)
             startActivity(intent)
             finish()
-        } else {
-            val database = FirebaseDatabase.getInstance().getReference("Books")
-            database.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    // Rebuild list
-                    categories.clear()
-                    snapshot.children.forEach {
-                        categories.add(it.key!!)
-                    }
-
-                    rv.adapter?.notifyDataSetChanged()
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    val builder = AlertDialog.Builder(this@MainActivity)
-                    with(builder)
-                    {
-                        setTitle("Loading failed")
-                        setMessage(error.message)
-                        setPositiveButton("OK", null)
-                        show()
-                    }
-                }
-            })
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Load categories
+        val database = FirebaseDatabase.getInstance().getReference("Books")
+        database.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // Rebuild list
+                categories.clear()
+                snapshot.children.forEach {
+                    categories.add(it.key!!)
+                }
+
+                rv.adapter?.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                val builder = AlertDialog.Builder(this@MainActivity)
+                with(builder)
+                {
+                    setTitle("Loading failed")
+                    setMessage(error.message)
+                    setPositiveButton("OK", null)
+                    show()
+                }
+            }
+        })
     }
 
     private fun onItemClick(view: View, item: String) {
         // Open category
-        val intent = Intent(this, BookActivity::class.java)
-        intent.putExtra(BookActivity.CATEGORY, item)
+        val intent = Intent(this, BooksActivity::class.java)
+        intent.putExtra(BooksActivity.CATEGORY, item)
         startActivity(intent)
     }
 }
